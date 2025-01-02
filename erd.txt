@@ -1,0 +1,12 @@
+job {
+    name: 
+    start: int64
+    end: int64
+    status: job status 
+  }
+
+
+job status {
+    name: 
+    value:
+  }
