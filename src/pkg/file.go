@@ -20,3 +20,7 @@ func CreateMultipleDir(locations []string) bool {
 func CreateDir(location string) error {
 	return os.MkdirAll(location, 0755)
 }
+
+func InitLogFile() error {
+	return nil
+}
