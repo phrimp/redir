@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
-	"reminder/src/app"
+	"redir/src/app"
 	"syscall"
 )
 

@@ -29,5 +29,24 @@ func AESGCMEncrypt(plaintext []byte, key []byte) ([]byte, []byte, error) {
 	return ciphertext, nonce, nil
 }
 
-func AESGCMDecrypt() {
+func AESGCMDecrypt(ciphertext []byte, nonce []byte, key []byte) ([]byte, error) {
+	// Create the cipher block
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create cipher block: %v", err)
+	}
+
+	// Create the GCM cipher
+	aesGCM, err := cipher.NewGCM(block)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create GCM cipher: %v", err)
+	}
+
+	// Decrypt the ciphertext
+	plaintext, err := aesGCM.Open(nil, nonce, ciphertext, nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decrypt ciphertext: %v", err)
+	}
+
+	return plaintext, nil
 }

@@ -3,7 +3,7 @@ package storage_test
 import (
 	"fmt"
 	"os"
-	"reminder/src/storage"
+	"redir/src/storage"
 	"testing"
 )
 

@@ -1,10 +1,24 @@
 package app
 
-import "github.com/joho/godotenv"
+import (
+	"redir/src/pkg"
 
+	"github.com/joho/godotenv"
+)
+
+// APPLICATION INITIALIZATION
 func init() {
-	godotenv.Load(".env")
+	godotenv.Load("local.env")
+	app_name = "Redir"
+	if !pkg.CreateMultipleDir(essential_dir) {
+		panic("Essential Directories failed to initialize")
+	}
 }
+
+var (
+	app_name      string
+	essential_dir = []string{"data", "log"}
+)
 
 func StartApp() error {
 	return nil

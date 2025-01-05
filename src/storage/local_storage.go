@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"reminder/src/pkg"
+	"redir/src/pkg"
 )
 
 var (
