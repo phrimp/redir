@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"redir/src/pkg"
 	"runtime"
 	"strings"
 	"time"
@@ -24,7 +25,7 @@ var (
 
 func init() {
 	godotenv.Load(".env")
-	if !createMultipleDirs(essentialDirs) {
+	if !pkg.CreateMultipleDirs(essentialDirs) {
 		panic("Essential Directories failed to initialize")
 	}
 	current_os = runtime.GOOS
@@ -145,15 +146,4 @@ func handleCreateUser(parts []string) {
 	}
 
 	log.Printf("User created: Name=%s, Age=%s\n", name, age)
-}
-
-// Utility to create multiple directories
-func createMultipleDirs(dirs []string) bool {
-	for _, dir := range dirs {
-		if err := os.MkdirAll(dir, 0755); err != nil {
-			log.Printf("Error creating directory %s: %v\n", dir, err)
-			return false
-		}
-	}
-	return true
 }

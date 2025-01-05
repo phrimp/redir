@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func CreateMultipleDir(locations []string) bool {
+func CreateMultipleDirs(locations []string) bool {
 	err_num := 0
 	for _, location := range locations {
 		err := CreateDir(location)
