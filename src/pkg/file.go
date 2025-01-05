@@ -14,7 +14,7 @@ func CreateMultipleDir(locations []string) bool {
 			err_num++
 		}
 	}
-	return err_num >= 2
+	return err_num <= 2
 }
 
 func CreateDir(location string) error {

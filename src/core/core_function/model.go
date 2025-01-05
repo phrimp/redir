@@ -1,6 +1,7 @@
 package corefunction
 
 import (
+	"redir/src/core"
 	"redir/src/enum"
 
 	"github.com/google/uuid"
@@ -14,4 +15,4 @@ type Job struct {
 	Status enum.JobStatus
 }
 
-var jobs map[uuid.UUID]Job
+var Jobs = map[uuid.UUID]core.CoreModel{}
