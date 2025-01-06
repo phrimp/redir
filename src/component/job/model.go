@@ -1,4 +1,4 @@
-package corefunction
+package job
 
 import (
 	"redir/src/core"

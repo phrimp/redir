@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"redir/src/pkg"
 	"runtime"
 	"strings"
@@ -21,23 +22,49 @@ var (
 	commandFile   = "command.txt"
 	data_path     = []*string{&pidFile, &commandFile}
 	current_os    string
+	location, _   = time.LoadLocation("Asia/Ho_Chi_Minh")
 )
 
 func init() {
 	godotenv.Load(".env")
 	if !pkg.CreateMultipleDirs(essentialDirs) {
-		panic("Essential Directories failed to initialize")
+		log.Fatal("Essential Directories failed to initialize")
 	}
 	current_os = runtime.GOOS
 	if current_os == "windows" {
 		for _, file_name := range data_path {
-			*file_name = essentialDirs[0] + "\\" + *file_name
+			for i := range essentialDirs {
+				essentialDirs[i] = essentialDirs[i] + "\\"
+			}
+			*file_name = essentialDirs[0] + *file_name
 		}
 	} else {
 		for _, file_name := range data_path {
-			*file_name = essentialDirs[0] + "/" + *file_name
+			for i := range essentialDirs {
+				essentialDirs[i] = essentialDirs[i] + "/"
+			}
+			*file_name = essentialDirs[0] + *file_name
 		}
 	}
+	// Goroutine for log file (new log file each 24h)
+	go func() {
+		for {
+			now := time.Now().In(location)
+			log_name := essentialDirs[1] + "log_server_at_" + now.Format("2006-01-02_15-04") + ".log"
+			logDir := filepath.Dir(log_name)
+			err := pkg.CreateDir(logDir)
+			if err != nil {
+				log.Fatal("Log file failed to initialize:", err)
+			}
+			f, err := os.OpenFile(log_name, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+			if err != nil {
+				log.Fatal("error opening file:", err)
+			}
+			log.SetOutput(f)
+			time.Sleep(24 * time.Hour)
+			f.Close()
+		}
+	}()
 }
 
 func StartApp() error {
@@ -124,26 +151,12 @@ func handleCommand(command string) {
 	switch parts[0] {
 	case "--createuser":
 		handleCreateUser(parts)
+	case "--job":
+		switch parts[1] {
+		case "--new":
+			handleCreateJob(parts)
+		}
 	default:
 		log.Printf("Unknown command: %s\n", command)
 	}
-}
-
-func handleCreateUser(parts []string) {
-	var name, age string
-	for i, arg := range parts {
-		if arg == "--name" && i+1 < len(parts) {
-			name = parts[i+1]
-		}
-		if arg == "--age" && i+1 < len(parts) {
-			age = parts[i+1]
-		}
-	}
-
-	if name == "" || age == "" {
-		log.Println("Error: --name and --age are required for --createuser")
-		return
-	}
-
-	log.Printf("User created: Name=%s, Age=%s\n", name, age)
 }
