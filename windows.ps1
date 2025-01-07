@@ -1,4 +1,9 @@
+# Set-ExecutionPolicy RemoteSigned
 # .\windows.ps1 -ProjectDir "C:\Path\To\Your\Project"
+# Check for an existing Go project
+param (
+    [string]$ProjectDir
+)
 # Function to print messages
 function Print-Message {
     param (
@@ -36,10 +41,7 @@ if (-not (Get-Command go -ErrorAction SilentlyContinue)) {
 $GoVersion = go version
 Print-Message "Golang installed successfully. Version: $GoVersion"
 
-# Check for an existing Go project
-param (
-    [string]$ProjectDir
-)
+
 
 if (-not $ProjectDir) {
     Write-Host "No project directory specified. Usage: .\windows.ps1 -ProjectDir 'C:\Path\To\Your\Project'" -ForegroundColor Yellow
