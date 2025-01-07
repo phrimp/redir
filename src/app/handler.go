@@ -5,7 +5,7 @@ import (
 	"log"
 	"redir/src/component/job"
 	"redir/src/core"
-	"strconv"
+	"strings"
 )
 
 func handleCreateUser(parts []string) {
@@ -29,32 +29,11 @@ func handleCreateUser(parts []string) {
 
 // --job --new --title example --detail example --start 192831223 --end 18239421
 func handleCreateJob(parts []string) {
-	params := map[string]interface{}{}
+	params := map[string]string{}
 	for i, arg := range parts {
-		switch arg {
-		case "--title":
-			params["title"] = parts[i+1]
-		case "--detail":
-			params["detail"] = parts[i+1]
-		case "--start":
-			tmp_start, err := strconv.Atoi(parts[i+1])
-			if err != nil {
-				log.Println("Error: Converting --start to int failed:", err)
-				return
-			}
-			params["start"] = int64(tmp_start)
-		case "--end":
-			tmp_end, err := strconv.Atoi(parts[i+1])
-			if err != nil {
-				log.Println("Error: Converting --end to int failed:", err)
-				return
-			}
-			params["end"] = int64(tmp_end)
+		if strings.Contains(arg, "--") {
+			params[strings.ReplaceAll(arg, "--", "")] = parts[i+1]
 		}
-	}
-	if params["title"] == nil || params["start"] == nil || params["end"] == nil {
-		log.Println("Error: --title ; --start ; --end are required for --job --new")
-		return
 	}
 	err := core.AddToRamMemory(params, &job.Jobs, &job.Job{})
 	if err != nil {

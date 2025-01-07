@@ -13,6 +13,8 @@ if ! command -v go &>/dev/null; then
   if command -v apt &>/dev/null; then
     print "Using apt to install Golang..."
     sudo apt update && sudo apt install -y golang
+  elif command -v yay &>/dev/null; then
+    sudo yay -S golang
   elif command -v yum &>/dev/null; then
     print "Using yum to install Golang..."
     sudo yum install -y golang

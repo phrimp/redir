@@ -9,7 +9,7 @@ import (
 
 // APPLICATION CORE STRUCTURE
 
-func AddToRamMemory(params map[string]interface{}, memory *map[uuid.UUID]CoreModel, model CoreModel) error {
+func AddToRamMemory(params map[string]string, memory *map[uuid.UUID]CoreModel, model CoreModel) error {
 	var core_model CoreModel = model
 	new_model, err := core_model.Create(params)
 	if err != nil || new_model == nil {
