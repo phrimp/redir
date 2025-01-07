@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"fmt"
 	"log"
 	"os"
 )
@@ -22,5 +23,26 @@ func CreateDir(location string) error {
 }
 
 func InitLogFile() error {
+	return nil
+}
+
+func ClearDirectory(dirPath string) error {
+	// Read the directory contents
+	files, err := os.ReadDir(dirPath)
+	if err != nil {
+		return fmt.Errorf("failed to read directory: %w", err)
+	}
+
+	// Iterate through each file and remove it
+	for _, file := range files {
+		filePath := dirPath + string(os.PathSeparator) + file.Name()
+
+		// Remove file or directory
+		err := os.RemoveAll(filePath)
+		if err != nil {
+			return fmt.Errorf("failed to remove file/directory %s: %w", filePath, err)
+		}
+	}
+
 	return nil
 }

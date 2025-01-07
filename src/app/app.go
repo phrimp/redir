@@ -20,6 +20,7 @@ var (
 	tmpStorage    = map[string]*map[uuid.UUID]interface{}{}
 	pidFile       = "redir.pid"
 	commandFile   = "command.txt"
+	listFile      = "data.txt"
 	data_path     = []*string{&pidFile, &commandFile}
 	current_os    string
 	location, _   = time.LoadLocation("Asia/Ho_Chi_Minh")
@@ -46,6 +47,9 @@ func init() {
 			*file_name = essentialDirs[0] + *file_name
 		}
 	}
+}
+
+func FirstStart() error {
 	// Goroutine for log file (new log file each 24h)
 	go func() {
 		for {
@@ -65,6 +69,7 @@ func init() {
 			f.Close()
 		}
 	}()
+	return nil
 }
 
 func StartApp() error {
@@ -73,6 +78,9 @@ func StartApp() error {
 	}
 	defer removePIDFile()
 
+	if err := FirstStart(); err != nil {
+		log.Fatalf("Error init first start: %v", err)
+	}
 	log.Println("Application running as a service...")
 
 	// Monitor command file for new commands
@@ -83,8 +91,7 @@ func StartApp() error {
 
 func Shutdown() {
 	log.Println("Cleaning up resources...")
-	removePIDFile()
-	removeCommandFile()
+	pkg.ClearDirectory(essentialDirs[0])
 }
 
 // Ensure only a single instance of the application runs
@@ -97,6 +104,7 @@ func enforceSingleInstance() error {
 	if err := os.WriteFile(pidFile, pid, 0644); err != nil {
 		return fmt.Errorf("failed to create PID file: %w", err)
 	}
+
 	return nil
 }
 
@@ -155,6 +163,8 @@ func handleCommand(command string) {
 		switch parts[1] {
 		case "--new":
 			handleCreateJob(parts)
+		case "--list":
+			handleListJob()
 		}
 	default:
 		log.Printf("Unknown command: %s\n", command)

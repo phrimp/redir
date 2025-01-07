@@ -43,3 +43,8 @@ func handleCreateJob(parts []string) {
 	log.Printf("Job Created: Title=%s, Detail=%s, will be reminded at,", params["title"], params["detail"])
 	fmt.Println(job.Jobs)
 }
+
+// --job --list
+func handleListJob() {
+	core.ReadCoreModel(job.Jobs, essentialDirs[0]+listFile)
+}
